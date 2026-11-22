@@ -228,8 +228,8 @@ td.ph{width:56px;text-align:center}
 .bar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--sunk);margin-top:8px}
 .bar i{display:block;height:100%}
 table.dash{border-collapse:collapse;width:100%;min-width:820px;font-size:14px}
-table.dash th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--sunk)}
-table.dash td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle;font-variant-numeric:tabular-nums}
+table.dash th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--sunk)}
+table.dash td{padding:14px 14px;border-bottom:1px solid var(--line);vertical-align:middle;font-variant-numeric:tabular-nums}
 table.dash tr:hover td{background:var(--sunk)}
 .tname{font-weight:700}
 .tname small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
@@ -262,7 +262,25 @@ table.dash tr:hover td{background:var(--sunk)}
 }
 .credit{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 28px;text-align:center;font-size:12px;color:var(--muted);letter-spacing:.04em}
 .credit b{font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.1em;color:var(--ink)}
-.flg{width:30px;height:20px;border-radius:2px;object-fit:cover;box-shadow:0 0 0 1px rgba(15,29,51,.2);vertical-align:-4px;margin-right:8px}
+.flg{width:46px;height:30px;border-radius:3px;object-fit:cover;box-shadow:0 0 0 1px rgba(15,29,51,.18);flex:none;display:block}
+.tcell{display:flex;align-items:center;gap:12px;min-width:0}
+.tcell .tn{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.tcell .tn b{font-weight:700;font-size:15px}
+.tcell .tn small{font-weight:400;color:var(--muted);font-size:12.5px}
+.tcell .cd{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--muted);opacity:.7;letter-spacing:.02em;line-height:1}
+/* team PIN cards (like the MAVA state board) */
+.pinboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:14px;padding:16px}
+.pcard{border:1.5px solid var(--line);border-radius:12px;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pcard:hover{border-color:var(--blue)}
+.pcard .top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.pcard .top .flg{width:56px;height:37px}
+.pcard .nm{font-weight:700;font-size:16px;line-height:1.2;min-width:0}
+.pcard .cd{font-family:var(--f-display);font-weight:800;font-size:24px;color:var(--muted);opacity:.6;letter-spacing:.02em;line-height:1}
+.pcard .st{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.pcard .acts{display:flex;flex-wrap:wrap;gap:8px}
+.pcard .acts .btn{flex:1 1 auto;justify-content:center}
+.pcard .edit{display:flex;gap:8px;flex-wrap:wrap}
+.pcard .edit input{flex:1 1 110px;min-width:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -772,7 +790,7 @@ function addPin(x){newPins=[x,...newPins.filter(p=>p.code!==x.code)]}
 const genPin=()=>String(Math.floor(100000+Math.random()*900000));
 function accHTML(){const have=new Set(accList.map(a=>a.code));const missing=STATES.filter(s=>!have.has(s[1]));
   return`${newPins.length?`<section class="sec" style="border-color:var(--yellow)"><div class="sec-h"><h2>PIN Baharu: Salin Sekarang</h2><p>PIN hanya dipaparkan sekali. Simpan atau hantar kepada pengurus pasukan sekarang.</p></div>
-    <div class="sec-b share"><div class="tbl-wrap"><table class="dash" style="min-width:420px"><thead><tr><th>Pasukan</th><th>Kod</th><th>PIN</th></tr></thead><tbody>${newPins.map(p=>`<tr><td class="tname">${flag(p.code)}${esc(p.label)}</td><td class="mono">${esc(p.code)}</td><td class="mono" style="font-size:16px;font-weight:700">${esc(p.pin)}</td></tr>`).join("")}</tbody></table></div>
+    <div class="sec-b share"><div class="tbl-wrap"><table class="dash" style="min-width:420px"><thead><tr><th>Pasukan</th><th>Kod</th><th>PIN</th></tr></thead><tbody>${newPins.map(p=>`<tr><td><div class="tcell">${flag(p.code)}<div class="tn"><b>${esc(p.label)}</b></div></div></td><td class="mono">${esc(p.code)}</td><td class="mono" style="font-size:16px;font-weight:700">${esc(p.pin)}</td></tr>`).join("")}</tbody></table></div>
      <textarea id="np-text" readonly>${esc(newPins.map(p=>`${p.label} (${cfg.title})\nPautan: ${shareLink()}\nLog masuk sebagai: ${p.code==="ADMIN"?"Urus Setia Kejohanan":p.label+" ("+p.code+")"}\nPIN: ${p.pin}`).join("\n\n"))}</textarea>
      <div class="actions"><button class="btn primary" type="button" id="np-copy">Salin semua</button><button class="btn" type="button" id="np-clear">Selesai, sembunyikan PIN</button></div></div></section>`:""}
    <section class="sec"><div class="sec-h"><h2>PIN Urus Setia</h2><p>${sess.role==="super"?"Super admin boleh menetapkan PIN baharu untuk urus setia kejohanan ini.":"Tukar PIN log masuk urus setia kejohanan ini."}</p></div>
@@ -785,8 +803,10 @@ function accHTML(){const have=new Set(accList.map(a=>a.code));const missing=STAT
      <div class="actions"><button class="btn go" type="submit">Tambah pasukan</button>${missing.length?`<button class="btn" type="button" id="ac-all">Tambah ${missing.length} negeri sekaligus</button>`:""}</div>
      <datalist id="states">${STATES.map(s=>`<option value="${s[0]}">`).join("")}</datalist>
     </form>
-    ${accList.length?`<div class="tbl-wrap"><table class="dash"><thead><tr><th>Pasukan</th><th>Kod</th><th>Borang</th><th></th></tr></thead><tbody>${accList.map(a=>{const d=allDocs.get(a.code);const st=["L","P"].map(k=>d?.teams?.[k]?`${SEX[k].ms}: ${d.teams[k].status==="submitted"?"Dihantar":"Draf"}`:"").filter(Boolean).join(" · ");
-      return`<tr><td class="tname">${flag(a.code)}${esc(a.label||"")}</td><td class="mono">${esc(a.code)}</td><td style="color:var(--muted);font-size:13px">${esc(st||"Belum mula")}</td><td style="white-space:nowrap">${editPin===a.code?`<span class="copyrow" style="display:inline-flex;flex-wrap:nowrap;gap:6px"><input class="i mono" id="ep-v" maxlength="12" value="${genPin()}" style="width:110px" aria-label="PIN baharu ${esc(a.label||a.code)}"><button class="btn sm go" type="button" data-epsave="${esc(a.code)}">Simpan</button><button class="btn sm" type="button" data-epcancel="1">Batal</button></span>`:`<button class="btn sm" type="button" data-reset="${esc(a.code)}">Tukar PIN</button> <button class="btn sm danger" type="button" data-adel="${esc(a.code)}">Buang akses</button>`}</td></tr>`}).join("")}</tbody></table></div>`:`<div class="empty"><b>Belum ada pasukan</b>Tambah pasukan satu demi satu, atau tambah semua negeri sekaligus.</div>`}
+    ${accList.length?`<div class="pinboard">${accList.map(a=>{const d=allDocs.get(a.code);const chips=["L","P"].map(k=>{const t=d?.teams?.[k];return`<span class="chip ${t?(t.status==="submitted"?"ok":"draft"):"mute"}">${SEX[k].ms}: ${t?(t.status==="submitted"?"Dihantar":"Draf"):"Belum mula"}</span>`}).join("");
+      return`<article class="pcard"><div class="top">${flag(a.code)||'<span></span>'}<div class="nm">${esc(a.label||a.code)}</div><span class="cd">${esc(a.code)}</span></div>
+       <div class="st">${chips}</div>
+       ${editPin===a.code?`<div class="edit"><input class="i mono" id="ep-v" maxlength="12" value="${genPin()}" aria-label="PIN baharu ${esc(a.label||a.code)}"><button class="btn sm go" type="button" data-epsave="${esc(a.code)}">Simpan</button><button class="btn sm" type="button" data-epcancel="1">Batal</button></div>`:`<div class="acts"><button class="btn sm" type="button" data-reset="${esc(a.code)}">Tukar PIN</button><button class="btn sm danger" type="button" data-adel="${esc(a.code)}">Buang akses</button></div>`}</article>`}).join("")}</div>`:`<div class="empty"><b>Belum ada pasukan</b>Tambah pasukan satu demi satu, atau tambah semua negeri sekaligus.</div>`}
    </section>`}
 async function reloadAcc(){const r=await rpc("kj_access_list",A());accList=r.access||[];render()}
 function bindAcc(){
@@ -836,7 +856,7 @@ function dashHTML(){const teams=allTeams();const sub=teams.filter(x=>x.t.status=
    </div>
    ${teams.length?`<div class="tbl-wrap"><table class="dash"><thead><tr><th>Pasukan</th><th>Kategori</th><th>Pemain</th><th>Pegawai</th><th>Semakan</th><th>Status</th><th>Denda</th><th>Kemas kini</th><th></th></tr></thead><tbody>
     ${rows.map(x=>{const iss=teamIssues(x.t);const bad=iss.filter(i=>i[0]==="bad").length,w=iss.length-bad;const offs=OFFICIALS.filter(o=>x.t.officials[o[0]].name.trim()).length;
-     return`<tr><td class="tname">${flag(x.id)}${esc(x.t.team||"(tiada nama)")} <span class="mono" style="color:var(--muted)">${esc(x.t.code)}</span><small>${esc(names[x.id]||"")}${x.t.contact.tel?" · "+esc(x.t.contact.tel):""}</small></td>
+     return`<tr><td><div class="tcell">${flag(x.id)}<div class="tn"><b>${esc(x.t.team||"(tiada nama)")}</b><small>${esc(x.t.contact.name||"")}${x.t.contact.tel?" · "+esc(x.t.contact.tel):""}</small></div><span class="cd">${esc(x.t.code||x.id)}</span></div></td>
      <td>${SEX[x.key].ms}</td><td>${x.t.players.filter(filled).length}</td><td>${offs}/6</td>
      <td>${bad?`<span class="chip bad">${bad} ralat</span>`:""} ${w?`<span class="chip warn">${w} amaran</span>`:""} ${!iss.length?`<span class="chip ok">Lulus</span>`:""}</td>
      <td>${teamStatusChip(x.t)}</td><td>${teamLate(x.t)?`<button class="chip ${x.t.finePaid?"ok":"bad"}" style="border:0;cursor:pointer" type="button" data-fine="${esc(x.id)}|${x.key}" title="Klik untuk tukar status bayaran">${x.t.finePaid?"Dibayar":"Belum bayar"}</button>`:`<span style="color:var(--muted)">–</span>`}</td><td style="color:var(--muted);font-size:13px">${x.t.updatedAt?new Date(x.t.updatedAt).toLocaleString("ms-MY",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</td>
