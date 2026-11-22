@@ -271,6 +271,7 @@ table.dash td:first-child{min-width:300px}
 table.dash td{white-space:nowrap}
 table.dash td:first-child .tn{white-space:normal}
 .tcell .tn small{display:block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tcell .tn small.tel{font-family:var(--f-mono);font-size:12px;max-width:none;margin-top:1px}
 .tcell .cd{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--muted);opacity:.7;letter-spacing:.02em;line-height:1}
 /* team PIN cards (like the MAVA state board) */
 .pinboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:14px;padding:16px}
@@ -860,7 +861,7 @@ function dashHTML(){const teams=allTeams();const sub=teams.filter(x=>x.t.status=
    </div>
    ${teams.length?`<div class="tbl-wrap"><table class="dash"><thead><tr><th>Pasukan</th><th>Kategori</th><th>Pemain</th><th>Pegawai</th><th>Semakan</th><th>Status</th><th>Denda</th><th>Kemas kini</th><th></th></tr></thead><tbody>
     ${rows.map(x=>{const iss=teamIssues(x.t);const bad=iss.filter(i=>i[0]==="bad").length,w=iss.length-bad;const offs=OFFICIALS.filter(o=>x.t.officials[o[0]].name.trim()).length;
-     return`<tr><td><div class="tcell">${flag(x.id)}<div class="tn"><b>${esc(x.t.team||"(tiada nama)")}</b><small>${esc(x.t.contact.name||"")}${x.t.contact.tel?" · "+esc(x.t.contact.tel):""}</small></div><span class="cd">${esc(x.t.code||x.id)}</span></div></td>
+     return`<tr><td><div class="tcell">${flag(x.id)}<div class="tn"><b>${esc(x.t.team||"(tiada nama)")}</b>${x.t.contact.name?`<small>${esc(x.t.contact.name)}</small>`:""}${x.t.contact.tel?`<small class="tel">☎ ${esc(x.t.contact.tel)}</small>`:""}</div><span class="cd">${esc(x.t.code||x.id)}</span></div></td>
      <td>${SEX[x.key].ms}</td><td>${x.t.players.filter(filled).length}</td><td>${offs}/6</td>
      <td>${bad?`<span class="chip bad">${bad} ralat</span>`:""} ${w?`<span class="chip warn">${w} amaran</span>`:""} ${!iss.length?`<span class="chip ok">Lulus</span>`:""}</td>
      <td>${teamStatusChip(x.t)}</td><td>${teamLate(x.t)?`<button class="chip ${x.t.finePaid?"ok":"bad"}" style="border:0;cursor:pointer" type="button" data-fine="${esc(x.id)}|${x.key}" title="Klik untuk tukar status bayaran">${x.t.finePaid?"Dibayar":"Belum bayar"}</button>`:`<span style="color:var(--muted)">–</span>`}</td><td style="color:var(--muted);font-size:13px">${x.t.updatedAt?new Date(x.t.updatedAt).toLocaleString("ms-MY",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):""}</td>
