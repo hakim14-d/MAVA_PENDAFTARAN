@@ -267,6 +267,10 @@ table.dash tr:hover td{background:var(--sunk)}
 .tcell .tn{display:flex;flex-direction:column;min-width:0;line-height:1.25}
 .tcell .tn b{font-weight:700;font-size:15px}
 .tcell .tn small{font-weight:400;color:var(--muted);font-size:12.5px}
+table.dash td:first-child{min-width:300px}
+table.dash td{white-space:nowrap}
+table.dash td:first-child .tn{white-space:normal}
+.tcell .tn small{display:block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tcell .cd{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--muted);opacity:.7;letter-spacing:.02em;line-height:1}
 /* team PIN cards (like the MAVA state board) */
 .pinboard{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:14px;padding:16px}
